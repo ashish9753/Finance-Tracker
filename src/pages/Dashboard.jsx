@@ -83,7 +83,7 @@ export default function Dashboard({ user, dark, setDark }) {
           </button>
         </div>
 
-        <TransactionList txs={filtered} dark={dark} onEdit={openEdit} />
+        <TransactionList txs={filtered} dark={dark} onEdit={openEdit} user={user} />
       </main>
 
       {/* Floating Action Button */}

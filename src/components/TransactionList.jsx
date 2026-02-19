@@ -2,7 +2,7 @@ import { deleteTx } from '../services/transactions'
 
 const CAT_ICONS = { Food: '🍔', Transport: '🚗', Shopping: '🛍️', Health: '❤️', Education: '📚', Entertainment: '🎬', Salary: '💼', Freelance: '💻', Investment: '📊', Other: '📌' }
 
-export default function TransactionList({ txs, dark, onEdit }) {
+export default function TransactionList({ txs, dark, onEdit, user }) {
   const muted = dark ? 'text-zinc-400' : 'text-gray-500'
 
   if (!txs.length) return (
@@ -60,7 +60,7 @@ export default function TransactionList({ txs, dark, onEdit }) {
                 }`}
               >Edit</button>
               <button
-                onClick={() => deleteTx(tx.id)}
+                onClick={() => deleteTx(tx.id, user.uid)}
                 className="text-xs px-2.5 py-1 rounded-lg font-medium bg-red-500/15 hover:bg-red-500/30 text-red-400 transition-all duration-150 hover:scale-105 active:scale-95"
               >Delete</button>
             </div>
