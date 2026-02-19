@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { login, register } from '../services/auth'
+import Footer from '../components/Footer'
 
 export default function Login({ dark }) {
   const [isReg, setIsReg] = useState(false)
@@ -31,8 +32,9 @@ export default function Login({ dark }) {
     : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-emerald-400'
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${base}`}>
-      <div className={`animate-scaleIn w-full max-w-sm p-8 rounded-3xl ${card}`}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${base}`}>
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className={`animate-scaleIn w-full max-w-sm p-8 rounded-3xl ${card}`}>
 
         <div className="flex items-center gap-3 mb-8">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-emerald-500/30">
@@ -81,6 +83,8 @@ export default function Login({ dark }) {
           </button>
         </p>
       </div>
+      </div>
+      <Footer dark={dark} />
     </div>
   )
 }

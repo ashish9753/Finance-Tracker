@@ -5,16 +5,23 @@ const CATS = ['Food', 'Transport', 'Shopping', 'Health', 'Education', 'Entertain
 
 export default function TransactionModal({ uid, dark, onClose, editItem }) {
   const [form, setForm] = useState(editItem ? { title: editItem.title, amount: editItem.amount, type: editItem.type, category: editItem.category, date: editItem.date } : { title: '', amount: '', type: 'expense', category: 'Other', date: new Date().toISOString().split('T')[0] })
-  const [loading, setLoading] = useState(false)
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
   const handle = async (e) => {
     e.preventDefault()
-    setLoading(true)
-    editItem ? await updateTx(editItem.id, form) : await addTx(uid, form)
-    setLoading(false)
-    onClose()
+    // Save first, then close on success
+    try {
+      console.log('Saving transaction with uid:', uid, 'data:', form)
+      await (editItem ? updateTx(editItem.id, uid, form) : addTx(uid, form))
+      console.log('Transaction saved successfully to Firebase!')
+      onClose()
+    } catch (err) {
+      console.error('Transaction error:', err)
+      console.error('Error code:', err.code)
+      console.error('Error message:', err.message)
+      alert('Error saving transaction: ' + err.message + '\n\nCheck browser console for details.')
+    }
   }
 
   const overlay = 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn'
@@ -86,10 +93,10 @@ export default function TransactionModal({ uid, dark, onClose, editItem }) {
           </div>
 
           <button
-            type="submit" disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-500/30 mt-2"
+            type="submit"
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 rounded-xl text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-500/30 mt-2"
           >
-            {loading ? '⏳ Saving...' : editItem ? '✅ Update Transaction' : '➕ Add Transaction'}
+            {editItem ? 'Update Transaction' : '➕ Add Transaction'}
           </button>
         </form>
       </div>

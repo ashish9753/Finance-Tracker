@@ -5,6 +5,7 @@ import SummaryCards from '../components/SummaryCards'
 import SpendingChart from '../components/SpendingChart'
 import TransactionList from '../components/TransactionList'
 import TransactionModal from '../components/TransactionModal'
+import Footer from '../components/Footer'
 
 export default function Dashboard({ user, dark, setDark }) {
   const [txs, setTxs] = useState([])
@@ -13,7 +14,14 @@ export default function Dashboard({ user, dark, setDark }) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
 
-  useEffect(() => subscribe(user.uid, setTxs), [user.uid])
+  useEffect(() => {
+    console.log('📊 Dashboard mounted for user:', user.uid)
+    const unsubscribe = subscribe(user.uid, setTxs)
+    return () => {
+      console.log('📊 Dashboard unmounting, cleaning up subscription')
+      unsubscribe()
+    }
+  }, [user.uid])
 
   const filtered = txs.filter(t => {
     if (filter !== 'all' && t.type !== filter) return false
@@ -88,6 +96,8 @@ export default function Dashboard({ user, dark, setDark }) {
       </button>
 
       {showModal && <TransactionModal uid={user.uid} dark={dark} onClose={() => setShowModal(false)} editItem={editItem} />}
+      
+      <Footer dark={dark} />
     </div>
   )
 }
